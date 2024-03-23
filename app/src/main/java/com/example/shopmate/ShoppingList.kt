@@ -185,19 +185,18 @@ fun ShoppingListItem(item: ShoppingItem, onEditClick: () -> Unit, onDeleteClick:
                 width = 2.dp,
                 color = Color.Cyan,
                 shape = RoundedCornerShape(10.dp)
-            )
+            ),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ){
         Text(fontSize = 14.sp, text = item.name, modifier = Modifier
-            .padding(16.dp)
-            .align(Alignment.CenterVertically));
+            .padding(16.dp));
         Text(fontSize = 14.sp, text = "Qty: ${item.quantity}", modifier = Modifier
-            .padding(16.dp)
-            .align(Alignment.CenterVertically));
+            .padding(16.dp));
         Row(modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly) {
+            .padding(16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
             IconButton(onClick = onEditClick) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit icon");
             }
