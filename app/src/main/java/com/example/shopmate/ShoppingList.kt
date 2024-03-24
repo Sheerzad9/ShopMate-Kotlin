@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -107,6 +109,11 @@ fun ShoppingListApp(){
                 }
                 ShoppingListItem(item = currItem,
                     onEditClick = { sItems = sItems.map { it.copy(isEditing = it.id==currItem.id) } },
+                    onCheckClick = { sItems = sItems.map {
+                        it.takeIf { item -> item.id == currItem.id }
+                            ?.copy(isChecked = !currItem.isChecked)
+                            ?: it
+                    } },
                     onDeleteClick = { sItems = sItems.filter { it.id != currItem.id } })
             }
         }
@@ -175,8 +182,7 @@ fun ShoppigListItemEditor(item: ShoppingItem, onEditComplete: (String, Int) -> U
 }
 
 @Composable
-fun ShoppingListItem(item: ShoppingItem, onEditClick: () -> Unit, onDeleteClick: () -> Unit
-){
+fun ShoppingListItem(item: ShoppingItem, onEditClick: () -> Unit, onCheckClick: () -> Unit, onDeleteClick: () -> Unit){
     Row (
         modifier = Modifier
             .padding(8.dp)
@@ -189,10 +195,14 @@ fun ShoppingListItem(item: ShoppingItem, onEditClick: () -> Unit, onDeleteClick:
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ){
-        Text(fontSize = 14.sp, text = item.name, modifier = Modifier
-            .padding(16.dp));
-        Text(fontSize = 14.sp, text = "Qty: ${item.quantity}", modifier = Modifier
-            .padding(16.dp));
+        Text(fontSize = 18.sp, text = item.name, modifier = Modifier
+            .padding(16.dp),
+            fontWeight = FontWeight.SemiBold,
+            textDecoration = if (item.isChecked) TextDecoration.LineThrough else TextDecoration.None);
+        Text(fontSize = 18.sp, text = "Qty: ${item.quantity}", modifier = Modifier
+            .padding(16.dp),
+            fontWeight = FontWeight.SemiBold,
+            textDecoration = if (item.isChecked) TextDecoration.LineThrough else TextDecoration.None);
         Row(modifier = Modifier
             .padding(16.dp),
             horizontalArrangement = Arrangement.End
@@ -200,8 +210,11 @@ fun ShoppingListItem(item: ShoppingItem, onEditClick: () -> Unit, onDeleteClick:
             IconButton(onClick = onEditClick) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit icon");
             }
+            IconButton(onClick = onCheckClick) {
+                Icon(imageVector = Icons.Default.CheckCircle, contentDescription = "Check icon", tint =  if (item.isChecked) Color.Green else Color.LightGray)
+            }
             IconButton(onClick = onDeleteClick) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete icon");
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete icon", tint = Color.Red);
             }
         }
     }
